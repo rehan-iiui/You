@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Personal World Hub</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08111f;
+  --panel:rgba(17,29,49,.78);
+  --panel2:rgba(24,39,64,.82);
+  --text:#f4f7ff;
+  --muted:#9eacc4;
+  --accent:#7c5cff;
+  --accent2:#00d4ff;
+  --good:#42e695;
+  --danger:#ff5577;
+  --border:rgba(255,255,255,.1);
+}
+body{
+  font-family:Inter,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 10% 10%,rgba(124,92,255,.25),transparent 28%),
+    radial-gradient(circle at 90% 20%,rgba(0,212,255,.18),transparent 25%),
+    radial-gradient(circle at 50% 100%,rgba(66,230,149,.1),transparent 30%),
+    var(--bg);
+  min-height:100vh;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0}
+.hidden{display:none!important}
+
+/* HUB */
+#hub{
+  min-height:100vh;
+  padding:35px;
+}
+.topbar{
+  max-width:1250px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:38px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.brand-icon{
+  width:54px;height:54px;border-radius:17px;
+  display:grid;place-items:center;
+  font-size:28px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 10px 35px rgba(124,92,255,.35);
+}
+.brand h1{font-size:26px}
+.brand p{color:var(--muted);font-size:13px;margin-top:3px}
+.hub-actions{display:flex;gap:9px}
+.small-btn{
+  background:var(--panel);
+  border:1px solid var(--border);
+  color:white;
+  padding:11px 15px;
+  border-radius:12px;
+}
+.small-btn:hover{background:var(--panel2)}
+.hero{
+  max-width:1250px;
+  margin:auto auto 32px;
+}
+.hero h2{
+  font-size:clamp(35px,5vw,64px);
+  line-height:1;
+  letter-spacing:-2px;
+}
+.hero h2 span{
+  background:linear-gradient(90deg,#fff,var(--accent2),#a78bfa);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+.hero p{color:var(--muted);margin-top:13px;font-size:16px}
+.app-grid{
+  max-width:1250px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+.app-card{
+  min-height:300px;
+  padding:28px;
+  border-radius:28px;
+  border:1px solid var(--border);
+  background:linear-gradient(145deg,rgba(22,35,58,.88),rgba(11,20,35,.82));
+  position:relative;
+  overflow:hidden;
+  transition:.3s;
+  box-shadow:0 20px 70px rgba(0,0,0,.22);
+}
+.app-card:hover{
+  transform:translateY(-7px);
+  border-color:rgba(255,255,255,.2);
+}
+.app-card:after{
+  content:"";
+  position:absolute;
+  width:170px;height:170px;
+  border-radius:50%;
+  right:-70px;top:-70px;
+  background:var(--glow);
+  filter:blur(30px);
+  opacity:.3;
+}
+.card-icon{
+  width:70px;height:70px;
+  border-radius:21px;
+  display:grid;place-items:center;
+  font-size:37px;
+  background:var(--cardbg);
+  margin-bottom:25px;
+}
+.app-card h3{font-size:26px}
+.app-card p{color:var(--muted);line-height:1.55;margin:10px 0 22px}
+.card-stats{display:flex;gap:10px;flex-wrap:wrap}
+.stat{
+  background:rgba(255,255,255,.06);
+  padding:8px 11px;
+  border-radius:10px;
+  font-size:12px;
+  color:#dce5f7;
+}
+.open-btn{
+  position:absolute;
+  bottom:25px;right:25px;
+  padding:11px 17px;
+  color:white;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),#6045d9);
+}
+.card-life{--cardbg:linear-gradient(135deg,#ff5f9e,#7c5cff);--glow:#ff5f9e}
+.card-mind{--cardbg:linear-gradient(135deg,#00d4ff,#3867ff);--glow:#00d4ff}
+.card-future{--cardbg:linear-gradient(135deg,#42e695,#168dff);--glow:#42e695}
+
+.overview{
+  max-width:1250px;margin:25px auto 0;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+}
+.over-card{
+  background:var(--panel);border:1px solid var(--border);
+  padding:18px;border-radius:17px;
+}
+.over-card b{font-size:25px;display:block}
+.over-card span{font-size:12px;color:var(--muted)}
+
+/* APP */
+.app{
+  min-height:100vh;
+  padding:25px;
+}
+.appbar{
+  max-width:1400px;margin:auto;
+  display:flex;align-items:center;gap:15px;
+  margin-bottom:22px;
+}
+.back{
+  background:var(--panel);border:1px solid var(--border);
+  color:white;padding:11px 15px;border-radius:12px;
+}
+.app-title{
+  flex:1;
+}
+.app-title h2{font-size:28px}
+.app-title p{color:var(--muted);font-size:13px}
+.search{
+  width:230px;background:var(--panel);
+  border:1px solid var(--border);
+  color:white;padding:12px 15px;border-radius:12px;
+  outline:none;
+}
+.workspace{
+  max-width:1400px;margin:auto;
+}
+.tabs{
+  display:flex;gap:8px;overflow-x:auto;
+  padding-bottom:12px;margin-bottom:18px;
+}
+.tab{
+  white-space:nowrap;
+  color:#bdc9dd;background:var(--panel);
+  border:1px solid var(--border);
+  padding:10px 14px;border-radius:11px;
+}
+.tab.active,.tab:hover{
+  color:white;background:linear-gradient(135deg,var(--accent),#5542be);
+}
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:22px;
+}
+.section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:15px;margin-bottom:18px;
+}
+.section-head h3{font-size:22px}
+.add-btn{
+  background:linear-gradient(135deg,var(--accent),#5542d5);
+  color:white;padding:11px 17px;border-radius:12px;
+}
+.items{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:14px;
+}
+.item{
+  background:rgba(255,255,255,.045);
+  border:1px solid var(--border);
+  padding:17px;border-radius:16px;
+  position:relative;
+}
+.item h4{font-size:16px;margin-bottom:7px}
+.item p{color:var(--muted);font-size:13px;line-height:1.5}
+.item .tag{
+  display:inline-block;
+  margin-top:12px;
+  background:rgba(124,92,255,.16);
+  color:#c7bbff;padding:5px 8px;
+  border-radius:8px;font-size:11px;
+}
+.item-actions{
+  display:flex;gap:6px;margin-top:13px;
+}
+.item-actions button{
+  background:rgba(255,255,255,.07);
+  color:#dce5f7;padding:7px 9px;border-radius:8px;font-size:12px;
+}
+.item-actions button:hover{background:rgba(255,255,255,.13)}
+.empty{
+  color:var(--muted);text-align:center;padding:45px 15px;
+  border:1px dashed var(--border);border-radius:16px;
+}
+
+/* DASHBOARD */
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:16px;
+}
+.big-progress{
+  padding:25px;background:linear-gradient(135deg,rgba(124,92,255,.18),rgba(0,212,255,.08));
+  border:1px solid var(--border);border-radius:20px;
+}
+.big-progress h3{font-size:25px}
+.progress-line{
+  height:12px;background:rgba(255,255,255,.08);
+  border-radius:20px;overflow:hidden;margin:20px 0 9px;
+}
+.progress-line div{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:.5s;
+}
+.progress-number{color:var(--muted);font-size:13px}
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mini{
+  background:rgba(255,255,255,.045);
+  padding:17px;border-radius:15px;border:1px solid var(--border);
+}
+.mini b{font-size:27px;display:block}
+.mini span{font-size:12px;color:var(--muted)}
+.quote{
+  margin-top:15px;padding:18px;
+  background:rgba(255,255,255,.045);
+  border-radius:15px;color:#dbe5f7;line-height:1.6;
+}
+
+/* MODAL */
+.modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(10px);
+  display:grid;place-items:center;
+  z-index:20;padding:20px;
+}
+.modal-box{
+  width:min(520px,100%);
+  background:#101c30;
+  border:1px solid var(--border);
+  border-radius:23px;
+  padding:24px;
+  box-shadow:0 30px 100px #000;
+}
+.modal-box h3{font-size:23px;margin-bottom:18px}
+.field{margin-bottom:13px}
+.field label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+.field input,.field textarea,.field select{
+  width:100%;padding:12px 13px;
+  background:#0a1425;color:white;
+  border:1px solid var(--border);
+  border-radius:11px;outline:none;
+}
+.field textarea{min-height:100px;resize:vertical}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.cancel{background:rgba(255,255,255,.08);color:white;padding:11px 16px;border-radius:10px}
+.save{background:linear-gradient(135deg,var(--accent),#5b42d5);color:white;padding:11px 18px;border-radius:10px}
+
+/* MIND */
+.thought-map{
+  min-height:310px;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(0,212,255,.1),transparent 25%),
+    rgba(255,255,255,.025);
+  border:1px solid var(--border);
+  border-radius:20px;
+}
+.node{
+  position:absolute;
+  padding:12px 16px;
+  border-radius:13px;
+  background:linear-gradient(135deg,#182d50,#16213b);
+  border:1px solid rgba(0,212,255,.25);
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+.node:nth-child(1){left:43%;top:42%}
+.node:nth-child(2){left:16%;top:20%}
+.node:nth-child(3){right:13%;top:25%}
+.node:nth-child(4){left:21%;bottom:20%}
+.node:nth-child(5){right:19%;bottom:19%}
+
+/* FUTURE */
+.future-header{
+  padding:30px;border-radius:22px;
+  background:
+   linear-gradient(120deg,rgba(66,230,149,.12),rgba(22,141,255,.12)),
+   var(--panel);
+  border:1px solid var(--border);
+  margin-bottom:16px;
+}
+.future-header h2{font-size:35px}
+.future-header p{color:var(--muted);margin-top:8px}
+.future-cards{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+}
+.future-card{
+  min-height:145px;padding:19px;border-radius:18px;
+  background:rgba(255,255,255,.045);
+  border:1px solid var(--border);
+}
+.future-card .emoji{font-size:28px}
+.future-card h4{margin-top:12px}
+.future-card p{font-size:12px;color:var(--muted);margin-top:5px}
+
+/* settings */
+.settings-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.setting{
+  padding:20px;background:rgba(255,255,255,.045);
+  border:1px solid var(--border);border-radius:17px;
+}
+.setting h4{margin-bottom:8px}
+.setting p{font-size:12px;color:var(--muted);margin-bottom:13px}
+.setting button{
+  padding:9px 13px;background:rgba(255,255,255,.08);
+  color:white;border-radius:9px;margin-right:5px;
+}
+
+@media(max-width:900px){
+  .app-grid{grid-template-columns:1fr}
+  .overview{grid-template-columns:1fr 1fr}
+  .dashboard-grid{grid-template-columns:1fr}
+  .future-cards{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  #hub,.app{padding:16px}
+  .topbar{align-items:flex-start}
+  .hub-actions{display:none}
+  .hero h2{font-size:40px}
+  .overview{grid-template-columns:1fr 1fr}
+  .search{width:150px}
+  .app-title h2{font-size:20px}
+  .settings-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= HUB ================= -->
+<div id="hub">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-icon">🌌</div>
+      <div>
+        <h1>Personal World</h1>
+        <p>Your ideas • your goals • your future</p>
+      </div>
+    </div>
+    <div class="hub-actions">
+      <button class="small-btn" onclick="openSettings()">⚙️ Settings</button>
+      <button class="small-btn" onclick="exportData()">💾 Export</button>
+      <button class="small-btn" onclick="document.getElementById('importFile').click()">📥 Import</button>
+      <input id="importFile" type="file" accept=".json" hidden onchange="importData(event)">
+    </div>
+  </div>
+
+  <div class="hero">
+    <h2>Build your <span>personal world.</span></h2>
+    <p>A creative space for everything you are thinking, planning, learning and dreaming about.</p>
+  </div>
+
+  <div class="app-grid">
+    <div class="app-card card-life">
+      <div class="card-icon">🖼️</div>
+      <h3>Life Canvas</h3>
+      <p>Organize the important parts of your life into one beautiful personal dashboard.</p>
+      <div class="card-stats">
+        <span class="stat">🎯 Goals</span>
+        <span class="stat">📅 Plans</span>
+        <span class="stat">📚 Learning</span>
+        <span class="stat">🏆 Achievements</span>
+      </div>
+      <button class="open-btn" onclick="openApp('life')">Open →</button>
+    </div>
+
+    <div class="app-card card-mind">
+      <div class="card-icon">🧠</div>
+      <h3>My Mind</h3>
+      <p>Capture thoughts and ideas, connect them together and turn your thinking into action.</p>
+      <div class="card-stats">
+        <span class="stat">💭 Thoughts</span>
+        <span class="stat">💡 Ideas</span>
+        <span class="stat">🧩 Connections</span>
+        <span class="stat">📌 Pinned</span>
+      </div>
+      <button class="open-btn" onclick="openApp('mind')">Open →</button>
+    </div>
+
+    <div class="app-card card-future">
+      <div class="card-icon">🚀</div>
+      <h3>Future Me</h3>
+      <p>Create a vision of the person you want to become and build a roadmap toward it.</p>
+      <div class="card-stats">
+        <span class="stat">👤 Profile</span>
+        <span class="stat">🏠 Dreams</span>
+        <span class="stat">💼 Career</span>
+        <span class="stat">🏆 Milestones</span>
+      </div>
+      <button class="open-btn" onclick="openApp('future')">Open →</button>
+    </div>
+  </div>
+
+  <div class="overview">
+    <div class="over-card"><b id="totalGoals">0</b><span>Total Goals</span></div>
+    <div class="over-card"><b id="totalIdeas">0</b><span>Total Ideas</span></div>
+    <div class="over-card"><b id="totalDreams">0</b><span>Future Dreams</span></div>
+    <div class="over-card"><b id="totalAch">0</b><span>Achievements</span></div>
+  </div>
+</div>
+
+<!-- ================= LIFE CANVAS ================= -->
+<div id="life" class="app hidden">
+  <div class="appbar">
+    <button class="back" onclick="goHome()">← Hub</button>
+    <div class="app-title">
+      <h2>🖼️ Life Canvas</h2>
+      <p>Your personal command center</p>
+    </div>
+    <input class="search" id="lifeSearch" placeholder="🔎 Search..." oninput="renderLife()">
+  </div>
+
+  <div class="workspace">
+    <div class="tabs" id="lifeTabs">
+      <button class="tab active" onclick="lifeTab('dashboard',this)">✨ Dashboard</button>
+      <button class="tab" onclick="lifeTab('goals',this)">🎯 Goals</button>
+      <button class="tab" onclick="lifeTab('plans',this)">📅 Plans</button>
+      <button class="tab" onclick="lifeTab('learning',this)">📚 Learning</button>
+      <button class="tab" onclick="lifeTab('achievements',this)">🏆 Achievements</button>
+      <button class="tab" onclick="lifeTab('favorites',this)">❤️ Favorites</button>
+      <button class="tab" onclick="lifeTab('travel',this)">✈️ Travel</button>
+      <button class="tab" onclick="lifeTab('dreams',this)">🚀 Dreams</button>
+      <button class="tab" onclick="lifeTab('notes',this)">📝 Notes</button>
+      <button class="tab" onclick="lifeTab('progress',this)">📊 Progress</button>
+    </div>
+
+    <div id="lifeContent"></div>
+  </div>
+</div>
+
+<!-- ================= MY MIND ================= -->
+<div id="mind" class="app hidden">
+  <div class="appbar">
+    <button class="back" onclick="goHome()">← Hub</button>
+    <div class="app-title">
+      <h2>🧠 My Mind</h2>
+      <p>Your personal thinking space</p>
+    </div>
+    <input class="search" id="mindSearch" placeholder="🔎 Search thoughts..." oninput="renderMind()">
+  </div>
+
+  <div class="workspace">
+    <div class="tabs">
+      <button class="tab active" onclick="mindTab('thoughts',this)">💭 Thoughts</button>
+      <button class="tab" onclick="mindTab('ideas',this)">💡 Ideas</button>
+      <button class="tab" onclick="mindTab('pinned',this)">📌 Pinned</button>
+      <button class="tab" onclick="mindTab('collections',this)">🗂️ Collections</button>
+      <button class="tab" onclick="mindTab('map',this)">🧩 Mind Map</button>
+    </div>
+    <div id="mindContent"></div>
+  </div>
+</div>
+
+<!-- ================= FUTURE ME ================= -->
+<div id="future" class="app hidden">
+  <div class="appbar">
+    <button class="back" onclick="goHome()">← Hub</button>
+    <div class="app-title">
+      <h2>🚀 Future Me</h2>
+      <p>Design the future you imagine</p>
+    </div>
+  </div>
+
+  <div class="workspace">
+    <div class="tabs">
+      <button class="tab active" onclick="futureTab('vision',this)">🌟 Vision</button>
+      <button class="tab" onclick="futureTab('profile',this)">👤 Profile</button>
+      <button class="tab" onclick="futureTab('dreams',this)">💭 Dreams</button>
+      <button class="tab" onclick="futureTab('career',this)">💼 Career</button>
+      <button class="tab" onclick="futureTab('skills',this)">🛠️ Skills</button>
+      <button class="tab" onclick="futureTab('milestones',this)">🏆 Milestones</button>
+      <button class="tab" onclick="futureTab('letters',this)">✉️ Letters</button>
+      <button class="tab" onclick="futureTab('roadmap',this)">🗺️ Roadmap</button>
+    </div>
+    <div id="futureContent"></div>
+  </div>
+</div>
+
+<!-- ================= MODAL ================= -->
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <h3 id="modalTitle">Add</h3>
+    <div id="modalFields"></div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeModal()">Cancel</button>
+      <button class="save" onclick="saveModal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   PERSONAL WORLD HUB
+   Everything is stored locally in the browser.
+========================================================= */
+
+const KEY="personalWorldHubData";
+
+let data=JSON.parse(localStorage.getItem(KEY)||"null")||{
+  life:{
+    goals:[],
+    plans:[],
+    learning:[],
+    achievements:[],
+    favorites:[],
+    travel:[],
+    dreams:[],
+    notes:[]
+  },
+  mind:{
+    thoughts:[],
+    ideas:[],
+    collections:[]
+  },
+  future:{
+    profile:{
+      name:"",
+      age:"",
+      description:""
+    },
+    dreams:[],
+    career:[],
+    skills:[],
+    milestones:[],
+    letters:[]
+  }
+};
+
+let currentLifeTab="dashboard";
+let currentMindTab="thoughts";
+let currentFutureTab="vision";
+let modalState=null;
+
+function saveData(){
+  localStorage.setItem(KEY,JSON.stringify(data));
+  updateOverview();
+}
+
+function updateOverview(){
+  document.getElementById("totalGoals").textContent=data.life.goals.length;
+  document.getElementById("totalIdeas").textContent=data.mind.ideas.length;
+  document.getElementById("totalDreams").textContent=data.future.dreams.length;
+  document.getElementById("totalAch").textContent=data.life.achievements.length;
+}
+
+function hideApps(){
+  ["hub","life","mind","future"].forEach(id=>{
+    document.getElementById(id).classList.add("hidden");
+  });
+}
+
+function goHome(){
+  hideApps();
+  document.getElementById("hub").classList.remove("hidden");
+  updateOverview();
+}
+
+function openApp(app){
+  hideApps();
+  document.getElementById(app).classList.remove("hidden");
+
+  if(app==="life"){
+    currentLifeTab="dashboard";
+    setActiveFirst("lifeTabs");
+    renderLife();
+  }
+  if(app==="mind"){
+    currentMindTab="thoughts";
+    renderMind();
+  }
+  if(app==="future"){
+    currentFutureTab="vision";
+    renderFuture();
+  }
+}
+
+function setActiveFirst(id){
+  const parent=document.getElementById(id);
+  if(parent)parent.querySelectorAll(".tab").forEach((x,i)=>x.classList.toggle("active",i===0));
+}
+
+/* ================= MODAL ================= */
+
+function openModal(title,fields,callback){
+  modalState=callback;
+  document.getElementById("modalTitle").textContent=title;
+
+  document.getElementById("modalFields").innerHTML=fields.map((f,i)=>{
+    if(f.type==="textarea"){
+      return `
+      <div class="field">
+        <label>${f.label}</label>
+        <textarea id="field${i}" placeholder="${f.placeholder||""}">${f.value||""}</textarea>
+      </div>`;
+    }
+
+    if(f.type==="select"){
+      return `
+      <div class="field">
+        <label>${f.label}</label>
+        <select id="field${i}">
+          ${f.options.map(o=>`<option ${o===f.value?"selected":""}>${o}</option>`).join("")}
+        </select>
+      </div>`;
+    }
+
+    return `
+    <div class="field">
+      <label>${f.label}</label>
+      <input id="field${i}" type="${f.type||"text"}" placeholder="${f.placeholder||""}" value="${f.value||""}">
+    </div>`;
+  }).join("");
+
+  document.getElementById("modal").classList.remove("hidden");
+}
+
+function closeModal(){
+  document.getElementById("modal").classList.add("hidden");
+  modalState=null;
+}
+
+function saveModal(){
+  if(!modalState)return;
+
+  const fields=[...document.querySelectorAll("#modalFields input,#modalFields textarea,#modalFields select")]
+    .map(x=>x.value.trim());
+
+  modalState(fields);
+  closeModal();
+  saveData();
+}
+
+/* ================= GENERIC ITEM ================= */
+
+function itemCard(item,type,index){
+  return `
+  <div class="item">
+    <h4>${escapeHTML(item.title||item.name||"Untitled")}</h4>
+    ${item.description?`<p>${escapeHTML(item.description)}</p>`:""}
+    ${item.date?`<span class="tag">📅 ${escapeHTML(item.date)}</span>`:""}
+    ${item.category?`<span class="tag">#${escapeHTML(item.category)}</span>`:""}
+    ${item.status?`<span class="tag">◉ ${escapeHTML(item.status)}</span>`:""}
+    <div class="item-actions">
+      ${type==="goal"?`<button onclick="toggleGoal(${index})">${item.done?"↩️ Undo":"✅ Complete"}</button>`:""}
+      ${type==="pin"?`<button onclick="togglePin('${type}',${index})">📌 ${item.pinned?"Unpin":"Pin"}</button>`:""}
+      <button onclick="deleteItem('${type}',${index})">🗑️ Delete</button>
+    </div>
+  </div>`;
+}
+
+function escapeHTML(str){
+  return String(str||"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function deleteItem(type,index){
+  const maps={
+    goal:["life","goals"],
+    plans:["life","plans"],
+    learning:["life","learning"],
+    achievement:["life","achievements"],
+    favorite:["life","favorites"],
+    travel:["life","travel"],
+    dream:["life","dreams"],
+    note:["life","notes"],
+    thought:["mind","thoughts"],
+    idea:["mind","ideas"],
+    collection:["mind","collections"],
+    fdream:["future","dreams"],
+    career:["future","career"],
+    skill:["future","skills"],
+    milestone:["future","milestones"],
+    letter:["future","letters"]
+  };
+
+  const m=maps[type];
+  if(!m)return;
+
+  data[m[0]][m[1]].splice(index,1);
+  saveData();
+
+  if(m[0]==="life")renderLife();
+  if(m[0]==="mind")renderMind();
+  if(m[0]==="future")renderFuture();
+}
+
+/* ================= LIFE CANVAS ================= */
+
+function lifeTab(tab,btn){
+  currentLifeTab=tab;
+  document.querySelectorAll("#lifeTabs .tab").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active");
+  renderLife();
+}
+
+function renderLife(){
+  const c=document.getElementById("lifeContent");
+  const q=(document.getElementById("lifeSearch")?.value||"").toLowerCase();
+
+  if(currentLifeTab==="dashboard"){
+    const goals=data.life.goals;
+    const completed=goals.filter(x=>x.done).length;
+    const percent=goals.length?Math.round(completed/goals.length*100):0;
+
+    c.innerHTML=`
+      <div class="dashboard-grid">
+        <div class="big-progress">
+          <h3>🌟 Your Life Canvas</h3>
+          <p class="progress-number">Overall goal progress</p>
+          <div class="progress-line"><div style="width:${percent}%"></div></div>
+          <b>${percent}%</b>
+          <div class="quote">“Your personal world is built from the small things you choose to capture, plan and complete.”</div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini"><b>${data.life.goals.length}</b><span>🎯 Goals</span></div>
+          <div class="mini"><b>${data.life.plans.length}</b><span>📅 Plans</span></div>
+          <div class="mini"><b>${data.life.learning.length}</b><span>📚 Learning</span></div>
+          <div class="mini"><b>${data.life.achievements.length}</b><span>🏆 Achievements</span></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="section-head">
+          <h3>⚡ Quick Add</h3>
+        </div>
+        <div class="items">
+          ${quickButton("🎯","Goal",()=>addLife("goals","goal"))}
+          ${quickButton("💡","Idea",()=>addMind("ideas","idea"))}
+          ${quickButton("📅","Plan",()=>addLife("plans","plans"))}
+          ${quickButton("📝","Note",()=>addLife("notes","note"))}
+        </div>
+      </div>`;
+    return;
+  }
+
+  const map={
+    goals:["🎯 Goals","Create goals and track completion.","Add Goal","goal"],
+    plans:["📅 Plans","Things you want to organize and accomplish.","Add Plan","plans"],
+    learning:["📚 Learning","Things you are currently learning.","Add Learning","learning"],
+    achievements:["🏆 Achievements","Things you have accomplished.","Add Achievement","achievement"],
+    favorites:["❤️ Favorites","Things you love and want to remember.","Add Favorite","favorite"],
+    travel:["✈️ Travel","Places you want to explore.","Add Place","travel"],
+    dreams:["🚀 Dreams","Big dreams you want to make real.","Add Dream","dream"],
+    notes:["📝 Personal Notes","Your private notes and reminders.","Add Note","note"]
+  };
+
+  if(currentLifeTab==="progress"){
+    renderProgress(c);
+    return;
+  }
+
+  const info=map[currentLifeTab];
+  let arr=data.life[currentLifeTab].filter(x=>{
+    const text=JSON.stringify(x).toLowerCase();
+    return text.includes(q);
+  });
+
+  c.innerHTML=`
+    <div class="panel">
+      <div class="section-head">
+        <div>
+          <h3>${info[0]}</h3>
+          <p style="color:var(--muted);font-size:13px;margin-top:5px">${info[1]}</p>
+        </div>
+        <button class="add-btn" onclick="addLife('${currentLifeTab}','${info[3]}')">＋ ${info[2]}</button>
+      </div>
+      <div class="items">
+        ${arr.length?arr.map((x,i)=>itemCard(x,info[3],data.life[currentLifeTab].indexOf(x))).join(""):`<div class="empty">Nothing here yet.<br><br>Click <b>${info[2]}</b> to add your first one.</div>`}
+      </div>
+    </div>`;
+}
+
+function quickButton(icon,title,fn){
+  return `<button class="item" style="text-align:left;color:white" onclick="(${fn.toString()})()">
+    <h4 style="font-size:22px">${icon} ${title}</h4>
+    <p>Add something to your personal world.</p>
+  </button>`;
+}
+
+function addLife(list,type){
+  const configs={
+    goals:[
+      {label:"Goal name",placeholder:"What do you want to achieve?"},
+      {label:"Description",type:"textarea",placeholder:"Describe your goal..."},
+      {label:"Due date",type:"date"},
+      {label:"Category",placeholder:"Personal, learning, project..."}
+    ],
+    plans:[
+      {label:"Plan",placeholder:"What are you planning?"},
+      {label:"Description",type:"textarea"},
+      {label:"Date",type:"date"}
+    ],
+    learning:[
+      {label:"What are you learning?",placeholder:"e.g. JavaScript"},
+      {label:"Description",type:"textarea"},
+      {label:"Category",placeholder:"Technology, language, science..."}
+    ],
+    achievements:[
+      {label:"Achievement",placeholder:"What did you accomplish?"},
+      {label:"Description",type:"textarea"},
+      {label:"Date",type:"date"}
+    ],
+    favorites:[
+      {label:"Favorite",placeholder:"Something you love"},
+      {label:"Description",type:"textarea"},
+      {label:"Category",placeholder:"Book, place, food, hobby..."}
+    ],
+    travel:[
+      {label:"Place",placeholder:"Where do you want to go?"},
+      {label:"Why?",type:"textarea",placeholder:"Why do you want to visit?"},
+      {label:"Target date",type:"date"}
+    ],
+    dreams:[
+      {label:"Dream",placeholder:"Describe a future dream"},
+      {label:"Details",type:"textarea"},
+      {label:"Target date",type:"date"}
+    ],
+    notes:[
+      {label:"Note title",placeholder:"Title"},
+      {label:"Note",type:"textarea"}
+    ]
+  };
+
+  openModal(configs[list]||configs.notes,configs[list]||configs.notes,vals=>{
+    const obj={
+      title:vals[0],
+      description:vals[1]||"",
+      date:vals[2]||"",
+      category:vals[3]||"",
+      done:false
+    };
+    data.life[list].push(obj);
+    renderLife();
+  });
+}
+
+/* ================= PROGRESS ================= */
+
+function renderProgress(c){
+  const goals=data.life.goals;
+  const done=goals.filter(x=>x.done).length;
+  const percent=goals.length?Math.round(done/goals.length*100):0;
+
+  c.innerHTML=`
+  <div class="panel">
+    <div class="section-head">
+      <h3>📊 Your Progress</h3>
+    </div>
+
+    <div class="big-progress">
+      <h3>🎯 Goal completion</h3>
+      <div class="progress-line"><div style="width:${percent}%"></div></div>
+      <b>${done} of ${goals.length} completed — ${percent}%</b>
+    </div>
+
+    <div class="mini-grid" style="margin-top:16px">
+      <div class="mini"><b>${data.life.learning.length}</b><span>📚 Learning items</span></div>
+      <div class="mini"><b>${data.life.plans.length}</b><span>📅 Plans</span></div>
+      <div class="mini"><b>${data.life.travel.length}</b><span>✈️ Travel places</span></div>
+      <div class="mini"><b>${data.life.achievements.length}</b><span>🏆 Achievements</span></div>
+    </div>
+  </div>`;
+}
+
+function toggleGoal(index){
+  data.life.goals[index].done=!data.life.goals[index].done;
+  saveData();
+  renderLife();
+}
+
+/* ================= MY MIND ================= */
+
+function mindTab(tab,btn){
+  currentMindTab=tab;
+  document.querySelectorAll("#mind .tab").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active");
+  renderMind();
+}
+
+function renderMind(){
+  const c=document.getElementById("mindContent");
+  const q=(document.getElementById("mindSearch")?.value||"").toLowerCase();
+
+  if(currentMindTab==="map"){
+    c.innerHTML=`
+    <div class="panel">
+      <div class="section-head">
+        <div>
+          <h3>🧩 Mind Map</h3>
+          <p style="color:var(--muted);font-size:13px;margin-top:5px">A visual view of how your thinking can connect.</p>
+        </div>
+      </div>
+      <div class="thought-map">
+        <div class="node">🧠 My Mind</div>
+        <div class="node">💭 Thoughts</div>
+        <div class="node">💡 Ideas</div>
+        <div class="node">🎯 Goals</div>
+        <div class="node">🚀 Future</div>
+      </div>
+    </div>`;
+    return;
+  }
+
+  let list=[];
+  let title="";
+  let type="";
+
+  if(currentMindTab==="thoughts"){
+    list=data.mind.thoughts;
+    title="💭 Thoughts";
+    type="thought";
+  }
+  if(currentMindTab==="ideas"){
+    list=data.mind.ideas;
+    title="💡 Ideas";
+    type="idea";
+  }
+  if(currentMindTab==="pinned"){
+    list=[
+      ...data.mind.thoughts.map((x,i)=>({...x,_type:"thought",_index:i})),
+      ...data.mind.ideas.map((x,i)=>({...x,_type:"idea",_index:i}))
+    ].filter(x=>x.pinned);
+    title="📌 Pinned";
+  }
+  if(currentMindTab==="collections"){
+    list=data.mind.collections;
+    title="🗂️ Collections";
+    type="collection";
+  }
+
+  list=list.filter(x=>JSON.stringify(x).toLowerCase().includes(q));
+
+  c.innerHTML=`
+  <div class="panel">
+    <div class="section-head">
+      <div>
+        <h3>${title}</h3>
+        <p style="color:var(--muted);font-size:13px;margin-top:5px">Capture, organize and develop your thinking.</p>
+      </div>
+      ${type?`<button class="add-btn" onclick="addMind('${currentMindTab}','${type}')">＋ Add</button>`:""}
+    </div>
+    <div class="items">
+      ${list.length?list.map((x,i)=>{
+        const realIndex=x._index!==undefined?x._index:i;
+        const realType=x._type||type;
+        return `
+        <div class="item">
+          <h4>${realType==="idea"?"💡":"💭"} ${escapeHTML(x.title)}</h4>
+          <p>${escapeHTML(x.description)}</p>
+          ${x.category?`<span class="tag">#${escapeHTML(x.category)}</span>`:""}
+          ${x.pinned?`<span class="tag">📌 Pinned</span>`:""}
+          <div class="item-actions">
+            ${realType!=="collection"?`<button onclick="pinMind('${realType}',${realIndex})">📌 ${x.pinned?"Unpin":"Pin"}</button>`:""}
+            ${realType==="idea"?`<button onclick="ideaToGoal(${realIndex})">🎯 Goal</button>`:""}
+            <button onclick="deleteItem('${realType}',${realIndex})">🗑️ Delete</button>
+          </div>
+        </div>`;
+      }).join(""):`<div class="empty">Your thinking space is empty.<br><br>Add a thought or idea.</div>`}
+    </div>
+  </div>`;
+}
+
+function addMind(list,type){
+  const fields=[
+    {label:type==="idea"?"Idea title":"Thought title",placeholder:"Give it a name"},
+    {label:"Details",type:"textarea",placeholder:"Write everything you are thinking..."},
+    {label:"Category",placeholder:"Technology, travel, creative, personal..."}
+  ];
+
+  openModal(type==="idea"?"💡 New Idea":"💭 New Thought",fields,vals=>{
+    data.mind[list].push({
+      title:vals[0],
+      description:vals[1],
+      category:vals[2],
+      pinned:false
+    });
+    renderMind();
+  });
+}
+
+function pinMind(type,index){
+  const arr=type==="idea"?data.mind.ideas:data.mind.thoughts;
+  arr[index].pinned=!arr[index].pinned;
+  saveData();
+  renderMind();
+}
+
+function ideaToGoal(index){
+  const idea=data.mind.ideas[index];
+
+  data.life.goals.push({
+    title:idea.title,
+    description:idea.description,
+    category:idea.category||"From My Mind",
+    date:"",
+    done:false
+  });
+
+  saveData();
+  alert("💡 Idea turned into a Life Canvas goal!");
+}
+
+/* ================= FUTURE ME ================= */
+
+function futureTab(tab,btn){
+  currentFutureTab=tab;
+  document.querySelectorAll("#future .tab").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active");
+  renderFuture();
+}
+
+function renderFuture(){
+  const c=document.getElementById("futureContent");
+
+  if(currentFutureTab==="vision"){
+    const p=data.future.profile;
+    c.innerHTML=`
+      <div class="future-header">
+        <h2>🚀 ${escapeHTML(p.name||"Future Me")}</h2>
+        <p>${escapeHTML(p.description||"Create a vision of the person you want to become.")}</p>
+      </div>
+
+      <div class="future-cards">
+        <div class="future-card"><div class="emoji">🎯</div><h4>${data.future.milestones.length}</h4><p>Milestones</p></div>
+        <div class="future-card"><div class="emoji">💭</div><h4>${data.future.dreams.length}</h4><p>Dreams</p></div>
+        <div class="future-card"><div class="emoji">🛠️</div><h4>${data.future.skills.length}</h4><p>Skills to learn</p></div>
+        <div class="future-card"><div class="emoji">✉️</div><h4>${data.future.letters.length}</h4><p>Letters to future self</p></div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="section-head">
+          <h3>🌟 Your Future Vision</h3>
+          <button class="add-btn" onclick="editFutureProfile()">✏️ Edit Vision</button>
+        </div>
+        <p style="color:var(--muted);line-height:1.7">
+          Your future profile is a space for the person, life and goals you want to build.
+          There is no fixed answer — make it your own.
+        </p>
+      </div>`;
+    return;
+  }
+
+  if(currentFutureTab==="profile"){
+    const p=data.future.profile;
+    c.innerHTML=`
+    <div class="panel">
+      <div class="section-head">
+        <h3>👤 Future Profile</h3>
+        <button class="add-btn" onclick="editFutureProfile()">✏️ Edit</button>
+      </div>
+      <div class="items">
+        <div class="item"><h4>👤 Name</h4><p>${escapeHTML(p.name||"Not set")}</p></div>
+        <div class="item"><h4>🎂 Future Age</h4><p>${escapeHTML(p.age||"Not set")}</p></div>
+        <div class="item"><h4>🌟 Vision</h4><p>${escapeHTML(p.description||"Not written yet")}</p></div>
+      </div>
+    </div>`;
+    return;
+  }
+
+  const map={
+    dreams:["💭 Dreams","Describe things you hope to experience.","Add Dream","fdream"],
+    career:["💼 Career","Future career ideas and ambitions.","Add Career","career"],
+    skills:["🛠️ Skills","Skills you want your future self to have.","Add Skill","skill"],
+    milestones:["🏆 Milestones","Important future targets.","Add Milestone","milestone"],
+    letters:["✉️ Letters","Letters written to your future self.","Write Letter","letter"]
+  };
+
+  if(currentFutureTab==="roadmap"){
+    renderRoadmap(c);
+    return;
+  }
+
+  const info=map[currentFutureTab];
+  const arr=data.future[currentFutureTab];
+
+  c.innerHTML=`
+  <div class="panel">
+    <div class="section-head">
+      <div>
+        <h3>${info[0]}</h3>
+        <p style="color:var(--muted);font-size:13px;margin-top:5px">${info[1]}</p>
+      </div>
+      <button class="add-btn" onclick="addFuture('${currentFutureTab}','${info[3]}')">＋ ${info[2]}</button>
+    </div>
+
+    <div class="items">
+      ${arr.length?arr.map((x,i)=>itemCard(x,info[3],i)).join(""):
+      `<div class="empty">Nothing here yet.<br><br>Click <b>${info[2]}</b> to begin.</div>`}
+    </div>
+  </div>`;
+}
+
+function editFutureProfile(){
+  const p=data.future.profile;
+
+  openModal("👤 Future Profile",[
+    {label:"Name",value:p.name,placeholder:"Your future name"},
+    {label:"Age",value:p.age,placeholder:"Age"},
+    {label:"Vision",type:"textarea",value:p.description,placeholder:"Describe your future self..."}
+  ],vals=>{
+    data.future.profile={
+      name:vals[0],
+      age:vals[1],
+      description:vals[2]
+    };
+    renderFuture();
+  });
+}
+
+function addFuture(list,type){
+  const configs={
+    dreams:[
+      {label:"Dream",placeholder:"Something you dream of doing"},
+      {label:"Details",type:"textarea"},
+      {label:"Target date",type:"date"}
+    ],
+    career:[
+      {label:"Career",placeholder:"A career or field"},
+      {label:"Why?",type:"textarea"},
+      {label:"Target date",type:"date"}
+    ],
+    skills:[
+      {label:"Skill",placeholder:"What skill do you want?"},
+      {label:"Why learn it?",type:"textarea"},
+      {label:"Target date",type:"date"}
+    ],
+    milestones:[
+      {label:"Milestone",placeholder:"An important future milestone"},
+      {label:"Details",type:"textarea"},
+      {label:"Target date",type:"date"}
+    ],
+    letters:[
+      {label:"Letter title",placeholder:"Dear Future Me..."},
+      {label:"Letter",type:"textarea",placeholder:"Write a message to your future self..."},
+      {label:"Date",type:"date"}
+    ]
+  };
+
+  openModal(configs[list],configs[list],vals=>{
+    data.future[list].push({
+      title:vals[0],
+      description:vals[1]||"",
+      date:vals[2]||"",
+      category:"",
+      status:"Future"
+    });
+    renderFuture();
+  });
+}
+
+function renderRoadmap(c){
+  const all=[
+    ...data.future.dreams.map(x=>({...x,type:"💭 Dream"})),
+    ...data.future.career.map(x=>({...x,type:"💼 Career"})),
+    ...data.future.skills.map(x=>({...x,type:"🛠️ Skill"})),
+    ...data.future.milestones.map(x=>({...x,type:"🏆 Milestone"}))
+  ];
+
+  c.innerHTML=`
+  <div class="panel">
+    <div class="section-head">
+      <div>
+        <h3>🗺️ Future Roadmap</h3>
+        <p style="color:var(--muted);font-size:13px;margin-top:5px">One view of the future you are building.</p>
+      </div>
+    </div>
+    <div class="items">
+      ${all.length?all.map(x=>`
+        <div class="item">
+          <h4>${x.type} ${escapeHTML(x.title)}</h4>
+          <p>${escapeHTML(x.description)}</p>
+          ${x.date?`<span class="tag">📅 ${escapeHTML(x.date)}</span>`:""}
+        </div>`).join(""):
+        `<div class="empty">Your roadmap is empty.<br><br>Add dreams, skills, career ideas or milestones.</div>`}
+    </div>
+  </div>`;
+}
+
+/* ================= SETTINGS ================= */
+
+function openSettings(){
+  openModal("⚙️ Personal World Settings",[
+    {label:"Theme",type:"select",options:["Midnight","Purple Night","Ocean","Emerald"],value:localStorage.getItem("theme")||"Midnight"}
+  ],vals=>{
+    applyTheme(vals[0]);
+  });
+}
+
+function applyTheme(theme){
+  localStorage.setItem("theme",theme);
+
+  const root=document.documentElement;
+
+  if(theme==="Purple Night"){
+    root.style.setProperty("--accent","#b05cff");
+    root.style.setProperty("--accent2","#ff5ca8");
+  }else if(theme==="Ocean"){
+    root.style.setProperty("--accent","#00aaff");
+    root.style.setProperty("--accent2","#00e0ff");
+  }else if(theme==="Emerald"){
+    root.style.setProperty("--accent","#00c98b");
+    root.style.setProperty("--accent2","#42e695");
+  }else{
+    root.style.setProperty("--accent","#7c5cff");
+    root.style.setProperty("--accent2","#00d4ff");
+  }
+}
+
+/* ================= EXPORT / IMPORT ================= */
+
+function exportData(){
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="personal-world-backup.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event){
+  const file=event.target.files[0];
+  if(!file)return;
+
+  const reader=new FileReader();
+
+  reader.onload=e=>{
+    try{
+      const imported=JSON.parse(e.target.result);
+
+      if(imported.life&&imported.mind&&imported.future){
+        data=imported;
+        saveData();
+        alert("✅ Personal World imported successfully!");
+        goHome();
+      }else{
+        alert("❌ This does not look like a Personal World backup.");
+      }
+    }catch(err){
+      alert("❌ Could not read the backup file.");
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+/* ================= START ================= */
+
+applyTheme(localStorage.getItem("theme")||"Midnight");
+updateOverview();
+renderLife();
+renderMind();
+renderFuture();
+</script>
+
+</body>
+</html>
